@@ -23,7 +23,7 @@ app.use(cors({
 
 // ✅ Manually Set Headers for Preflight Requests
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://savemail.vercel.app");
+    res.header("Access-Control-Allow-Origin", "https://savemail-git-main-princekumar021s-projects.vercel.app/");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type");
     res.header("Access-Control-Allow-Credentials", "true");
