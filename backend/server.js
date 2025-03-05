@@ -5,24 +5,25 @@ require("dotenv").config();
 
 const app = express();
 
-// ✅ Middleware
-app.use(express.json());
-
-// ✅ Configure CORS to allow only your frontend
+// ✅ CORS Configuration (Fixed)
 const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:3000"];
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
+            callback(null, origin); // Allow only defined origins
         } else {
             callback(new Error("CORS Policy: Not allowed"));
         }
     },
     methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
     credentials: true
 }));
 
-// ✅ Connect to MongoDB
+// ✅ Middleware
+app.use(express.json());
+
+// ✅ MongoDB Connection
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
@@ -37,26 +38,24 @@ const connectDB = async () => {
 };
 connectDB();
 
-// ✅ Define Schema & Model
+// ✅ Schema & Model
 const EmailSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true }
 });
 const Email = mongoose.model("Email", EmailSchema);
 
-// ✅ Health Check Route (For deployment testing)
+// ✅ Health Check Route
 app.get("/", (req, res) => {
     res.send("🚀 Server is running successfully!");
 });
 
-// ✅ API Route to Save Email
+// ✅ Email Save Route
 app.post("/save-email", async (req, res) => {
     try {
         const { email } = req.body;
         if (!email) {
             return res.status(400).json({ error: "Email is required" });
         }
-
-        // Save email
         const newEmail = new Email({ email });
         await newEmail.save();
         res.status(201).json({ message: "✅ Email saved successfully!" });
