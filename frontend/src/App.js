@@ -1,32 +1,34 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-require("dotenv").config();
+import { useState } from "react";
+import axios from "axios";
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+function App() {
+    const [email, setEmail] = useState("");
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log(err));
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:5000/save-email", { email });
+            alert(response.data.message);
+        } catch (error) {
+            alert("Error saving email");
+        }
+    };
 
-// Define Schema & Model
-const EmailSchema = new mongoose.Schema({ email: String });
-const Email = mongoose.model("Email", EmailSchema);
+    return (
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
+            <h2>Join Wishlist</h2>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    );
+}
 
-// API Route to Save Email
-app.post("/save-email", async (req, res) => {
-    try {
-        const newEmail = new Email({ email: req.body.email });
-        await newEmail.save();
-        res.status(201).json({ message: "Email saved successfully!" });
-    } catch (error) {
-        res.status(500).json({ error: "Error saving email" });
-    }
-});
-
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+export default App;
