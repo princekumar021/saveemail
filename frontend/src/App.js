@@ -7,7 +7,7 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/save-email", { email });
+            const response = await axios.post("https://saveemail.onrender.com/save-email", { email });
             alert(response.data.message);
         } catch (error) {
             alert("Error saving email");
