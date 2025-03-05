@@ -20,7 +20,7 @@ function App() {
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Enter your "
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
