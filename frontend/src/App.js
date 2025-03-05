@@ -7,7 +7,7 @@ function App() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://saveemail.onrender.com", { email });
+            const response = await axios.post("https://savemail-git-main-princekumar021s-projects.vercel.app/", { email });
             alert(response.data.message);
         } catch (error) {
             alert("Error saving email");
