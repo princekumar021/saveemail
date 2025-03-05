@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = express();
 
 // ✅ Corrected CORS Configuration
-const allowedOrigins = [process.env.CLIENT_URL, "https://savemail.vercel.app", "http://localhost:3000"];
+const allowedOrigins = ["https://savemail.vercel.app", "http://localhost:3000"];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -21,10 +21,22 @@ app.use(cors({
     credentials: true
 }));
 
+// ✅ Manually Set Headers for Preflight Requests
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://savemail.vercel.app");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Credentials", "true");
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200); // Handle Preflight Request
+    }
+    next();
+});
+
 // ✅ Middleware
 app.use(express.json());
 
-// ✅ MongoDB Connection
+// ✅ Connect to MongoDB
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
