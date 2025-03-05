@@ -5,14 +5,15 @@ require("dotenv").config();
 
 const app = express();
 
-// ✅ CORS Configuration (Fixed)
-const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:3000"];
+// ✅ Corrected CORS Configuration
+const allowedOrigins = [process.env.CLIENT_URL, "https://saveemail.vercel.app", "http://localhost:3000"];
+
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, origin); // Allow only defined origins
+            callback(null, true); // ✅ Allow requests from allowed origins
         } else {
-            callback(new Error("CORS Policy: Not allowed"));
+            callback(new Error("❌ CORS Policy: Not allowed"));
         }
     },
     methods: ["GET", "POST"],
@@ -38,18 +39,16 @@ const connectDB = async () => {
 };
 connectDB();
 
-// ✅ Schema & Model
-const EmailSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true }
-});
+// ✅ Define Schema & Model
+const EmailSchema = new mongoose.Schema({ email: { type: String, required: true, unique: true } });
 const Email = mongoose.model("Email", EmailSchema);
 
 // ✅ Health Check Route
 app.get("/", (req, res) => {
-    res.send("🚀 Server is running successfully!");
+    res.send("🚀 Server is running!");
 });
 
-// ✅ Email Save Route
+// ✅ Save Email API Route
 app.post("/save-email", async (req, res) => {
     try {
         const { email } = req.body;
