@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = express();
 
 // ✅ Corrected CORS Configuration
-const allowedOrigins = ["https://savemail.vercel.app", "http://localhost:3000"];
+const allowedOrigins = ["https://savemail-git-main-princekumar021s-projects.vercel.app/", "http://localhost:3000"];
 
 app.use(cors({
     origin: function (origin, callback) {
